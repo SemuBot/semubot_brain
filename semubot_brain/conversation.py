@@ -5,7 +5,7 @@ import time
 
 class Conversation:
 
-    def __init__(self, max_exchanges=6, idle_reset=300.0, clock=time.monotonic):
+    def __init__(self, max_exchanges=12, idle_reset=300.0, clock=time.monotonic):
         self.max_exchanges = max_exchanges
         self.idle_reset = idle_reset  # Seconds without an exchange before a new conversation
         self.clock = clock

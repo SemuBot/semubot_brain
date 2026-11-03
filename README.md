@@ -32,7 +32,7 @@ set per node in `semubot_support/launch/semubot_bringup.launch.py`.
 
 ## Loop (local/cloud)
 
-Speech detection -> whisper.cpp server -> LLM (last 6 exchanges of history) -> TTS -> `play`.
+Speech detection -> whisper.cpp server -> LLM (last 12 exchanges of history) -> TTS -> `play`.
 LLM failures are logged and the robot says "Vabandust, ma ei saa praegu mõelda.". Switching
 mode clears the history; switching to `local` pre-warms llama.cpp's prompt cache (first uncached
 prompt takes ~50 s on the NUC CPU, cached replies ~5-15 s).
@@ -74,7 +74,7 @@ The current settings plus the available speakers are published latched on
 
 ## Conversation history, log and cloud usage
 
-- **History:** the last 6 exchanges are sent to the LLM. They are forgotten on a mode change and
+- **History:** the last 12 exchanges are sent to the LLM. They are forgotten on a mode change and
   after **5 minutes without an exchange** (checked every 10 s), so the next visitor starts fresh.
 - **Conversation log:** the last 30 events (`heard`, `said`, `typed`, `info`, `error`) with a
   timestamp, published as a JSON list (latched) on `/semubot/conversation_log` for the chest
