@@ -9,19 +9,18 @@ import time
 import traceback
 import wave
 
-import rclpy
-import requests
 from audio_common_msgs.msg import AudioData
+import rclpy
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile
-from std_msgs.msg import Empty, Float32, Float32MultiArray, String
-
-from semubot_brain.config import ENV_FILE, MODES, load_config, read_env_file
+import requests
+from semubot_brain import tts_settings
+from semubot_brain.config import ENV_FILE, load_config, MODES, read_env_file
 from semubot_brain.conversation import Conversation, ConversationLog
 from semubot_brain.llm_backends import BackendError
-from semubot_brain import tts_settings
 from semubot_brain.usage import UsageTracker
 from semubot_brain.vad import SileroVad, SpeechDetector
+from std_msgs.msg import Empty, Float32, Float32MultiArray, String
 
 DEFAULT_THRESHOLD = 1000.0  # Loudness gate (RMS); adjustable from the chest display
 VAD_SETTINGS_FILE = os.path.expanduser('~/.config/semubot/vad.json')
@@ -480,6 +479,7 @@ class SemuBrainNode(Node):
                                capture_output=True, text=True)
             except subprocess.CalledProcessError as e:
                 self.get_logger().error(f'[TTS] Playback failed ({e.returncode}): {e.stderr}')
+
 
 def main(args=None):
     rclpy.init(args=args)
