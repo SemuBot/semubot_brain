@@ -1,6 +1,6 @@
 """Brain configuration from environment variables (see brain.env)."""
-import os
 from dataclasses import dataclass
+import os
 
 from semubot_brain.llm_backends import ClaudeBackend, OpenAIChatBackend
 from semubot_brain.usage import price_for

@@ -7,7 +7,7 @@ import pytest
 
 from semubot_brain.conversation import Conversation, ConversationLog
 from semubot_brain.llm_backends import BackendError, ClaudeBackend, OpenAIChatBackend
-from semubot_brain.usage import UsageTracker, cost, price_for
+from semubot_brain.usage import cost, price_for, UsageTracker
 
 
 class Clock:
@@ -98,6 +98,7 @@ def test_usage_tracker_keeps_about_two_months(tmp_path):
 
 
 def test_backends_report_token_usage():
+    pytest.importorskip('anthropic')
     backend = OpenAIChatBackend('http://x', 'm')
     ok = mock.Mock(status_code=200)
     ok.json.return_value = {'choices': [{'message': {'content': 'hei'}}],

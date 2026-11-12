@@ -1,5 +1,5 @@
-import pytest
 import numpy as np
+import pytest
 
 from semubot_brain.vad import FRAME, SpeechDetector
 

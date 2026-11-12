@@ -74,6 +74,7 @@ def _claude_message(text='Tere!', stop_reason='end_turn'):
 
 
 def test_claude_backend_uses_low_effort_and_fallbacks():
+    pytest.importorskip('anthropic')
     client = mock.Mock()
     client.beta.messages.create.return_value = _claude_message(' Tere! ')
     backend = ClaudeBackend('claude-opus-5-5', 'key', client=client)
@@ -89,6 +90,7 @@ def test_claude_backend_uses_low_effort_and_fallbacks():
 
 
 def test_claude_backend_haiku_uses_plain_messages_api():
+    pytest.importorskip('anthropic')
     client = mock.Mock()
     client.messages.create.return_value = _claude_message()
     ClaudeBackend('claude-haiku-4-5', 'key', client=client).reply('S', [])
@@ -98,6 +100,7 @@ def test_claude_backend_haiku_uses_plain_messages_api():
 
 
 def test_claude_backend_refusal_and_api_error_raise():
+    pytest.importorskip('anthropic')
     import anthropic
     client = mock.Mock()
     backend = ClaudeBackend('claude-opus-5-5', 'key', client=client)
@@ -146,6 +149,7 @@ def test_config_defaults_and_missing_claude_key():
 
 
 def test_config_claude_default_model():
+    pytest.importorskip('anthropic')
     config = load_config({'ANTHROPIC_API_KEY': 'k'})
     assert isinstance(config.cloud_backend, ClaudeBackend)
     assert config.cloud_backend.model == 'claude-opus-5-5'

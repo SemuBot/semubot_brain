@@ -34,7 +34,8 @@ class SileroVad:
 
 
 class SpeechDetector:
-    """Cuts the microphone stream into utterances.
+    """
+    Cuts the microphone stream into utterances.
 
     A chunk counts as speech when the VAD speech probability is at least prob_threshold
     and its RMS loudness is at least `threshold` (the loudness gate rejects far-away
@@ -79,7 +80,8 @@ class SpeechDetector:
         return max(probs, default=0.0)
 
     def process(self, chunk, listening=True):
-        """Feed one chunk of 16-bit mono PCM bytes.
+        """
+        Feed one chunk of 16-bit mono PCM bytes.
 
         Returns (rms, speech_probability, utterance) where utterance is the raw PCM bytes
         of a finished utterance, or None. Sets last_event to None or a dict:
