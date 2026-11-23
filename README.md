@@ -96,12 +96,22 @@ doing: `{"stage": ..., "mode": ..., "since": <unix time>}` with stage `manual` (
 `synthesizing` (TTS) or `speaking` (playback). Log entries for heard and said text carry a
 `details` field with how long each step took. The chest display shows both on the Vestlus screen.
 
-## Config: `~/.config/semubot/brain.env`
+## Config
 
-Read by the node at startup (process environment overrides it). Restart the bringup after edits.
-Keys: `CLOUD_PROVIDER` (claude|openai), `ANTHROPIC_API_KEY`, `CLAUDE_MODEL`
-(default `claude-opus-5-5`), `OPENAI_API_KEY`, `OPENAI_MODEL`, `LOCAL_LLM_URL`, `WHISPER_URL`,
-`TTS_URL`, `TTS_SPEAKER`, `VAD_MODEL`, `CLOUD_PRICE_INPUT`, `CLOUD_PRICE_OUTPUT`.
+Two sources, read at startup; restart the node after edits.
+
+The robot profile (`semubot_bringup/config/profiles/<revision>.yaml`, section `semu_brain_node`) holds
+what describes the robot: `tts_speaker` (default `mari`), `cloud_provider` (claude|openai),
+`claude_model` (default `claude-opus-5-5`), `openai_model`, `cloud_price_input`, `cloud_price_output`.
+The node gets it as its parameter file:
+
+```bash
+ros2 run semubot_brain llm_controller --ros-args --params-file <profile.yaml>
+```
+
+`~/.config/semubot/brain.env` holds what belongs to this computer and is not in git: `ANTHROPIC_API_KEY`,
+`OPENAI_API_KEY`, `LOCAL_LLM_URL`, `WHISPER_URL`, `TTS_URL`, `VAD_MODEL`. Any key of the profile may
+also be set there in upper case; `brain.env` and the process environment override the profile.
 
 ## Services it needs (systemd **user** services of `semubot`, lingering enabled)
 

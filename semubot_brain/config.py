@@ -7,6 +7,10 @@ from semubot_brain.usage import price_for
 
 MODES = ('manual', 'local', 'cloud')
 ENV_FILE = os.path.expanduser('~/.config/semubot/brain.env')
+# Settings that describe the robot rather than the computer: they come from the robot profile
+# (semubot_bringup/config/profiles) as ROS parameters. brain.env and the environment override them.
+PROFILE_KEYS = ('tts_speaker', 'cloud_provider', 'claude_model', 'openai_model',
+                'cloud_price_input', 'cloud_price_output')
 
 
 def read_env_file(path):
@@ -24,6 +28,12 @@ def read_env_file(path):
         key, value = line.split('=', 1)
         values[key.strip()] = value.strip().strip('"\'')
     return values
+
+
+def profile_env(values):
+    """Profile parameter values as env-style keys; unset (empty) ones are left out."""
+    return {key.upper(): str(value) for key, value in values.items()
+            if key in PROFILE_KEYS and value not in ('', None)}
 
 
 @dataclass

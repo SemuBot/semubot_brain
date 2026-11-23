@@ -15,7 +15,8 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile
 import requests
 from semubot_brain import tts_settings
-from semubot_brain.config import ENV_FILE, load_config, MODES, read_env_file
+from rcl_interfaces.msg import ParameterDescriptor
+from semubot_brain.config import ENV_FILE, load_config, MODES, PROFILE_KEYS, profile_env, read_env_file
 from semubot_brain.conversation import Conversation, ConversationLog
 from semubot_brain.llm_backends import BackendError
 from semubot_brain.usage import UsageTracker
@@ -92,7 +93,7 @@ Sinu eesmärk on muuta vestlus meeldivaks ja arusaadavaks, jättes inimesele ruu
 class SemuBrainNode(Node):
     def __init__(self):
         super().__init__('semu_brain_node')
-        self.config = load_config({**read_env_file(ENV_FILE), **os.environ})
+        self.config = load_config({**self._profile_env(), **read_env_file(ENV_FILE), **os.environ})
         if self.config.cloud_backend is None:
             self.get_logger().error(f'Cloud mode unavailable: {self.config.cloud_error}')
 
@@ -479,6 +480,12 @@ class SemuBrainNode(Node):
                                capture_output=True, text=True)
             except subprocess.CalledProcessError as e:
                 self.get_logger().error(f'[TTS] Playback failed ({e.returncode}): {e.stderr}')
+
+
+    def _profile_env(self):
+        for key in PROFILE_KEYS:
+            self.declare_parameter(key, '', ParameterDescriptor(dynamic_typing=True))
+        return profile_env({key: self.get_parameter(key).value for key in PROFILE_KEYS})
 
 
 def main(args=None):
