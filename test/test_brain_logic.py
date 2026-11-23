@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 import requests
 
-from semubot_brain.config import load_config, read_env_file
+from semubot_brain.config import load_config, profile_env, read_env_file
 from semubot_brain.conversation import Conversation
 from semubot_brain.llm_backends import BackendError, ClaudeBackend, OpenAIChatBackend
 
@@ -176,3 +176,10 @@ def test_read_env_file(tmp_path):
     assert read_env_file(env) == {'CLOUD_PROVIDER': 'claude', 'ANTHROPIC_API_KEY': 'sk-x',
                                   'OPENAI_MODEL': ''}
     assert read_env_file(tmp_path / 'missing.env') == {}
+
+
+def test_profile_env():
+    values = {'tts_speaker': 'vesta', 'cloud_price_input': 3.0, 'claude_model': '', 'other': 'x'}
+    assert profile_env(values) == {'TTS_SPEAKER': 'vesta', 'CLOUD_PRICE_INPUT': '3.0'}
+    config = load_config({**profile_env(values), 'TTS_SPEAKER': 'mari'})
+    assert config.tts_speaker == 'mari'  # brain.env and the environment win over the profile
